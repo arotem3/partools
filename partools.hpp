@@ -7,6 +7,6 @@
 #include "partools/forall.hpp"
 #include "partools/ThreadBlock.hpp"
 #include "partools/memory.hpp"
-#include "partools/Array.hpp"
+#include "partools/HostDevicePointer.hpp"
 
 #endif

@@ -14,6 +14,12 @@ namespace partools
   namespace gpu
   {
     template <typename Function>
+    /**
+     * @brief Executes a function in parallel on the GPU.
+     * 
+     * @param n The number of iterations.
+     * @param fun The function to execute.
+     */
     __global__ static void forall_kernel(int n, Function fun)
     {
       const int k = threadIdx.x + blockIdx.x * blockDim.x;
@@ -24,6 +30,13 @@ namespace partools
       fun(k);
     }
 
+    /**
+     * @brief Executes a function in parallel on the GPU in batches.
+     * 
+     * @param n The number of iterations.
+     * @param fun The function to execute.
+     * @param batch_size The batch size.
+     */
     template <typename Function>
     __global__ static void batched_forall_kernel(int n, Function fun, int batch_size)
     {
@@ -65,6 +78,12 @@ namespace partools
         synchronize();
     }
 
+    /**
+      * @brief Executes a function in parallel on the GPU, where each block handles one iteration.
+      * 
+      * @param n The number of iterations.
+      * @param fun The function to execute.
+      */
     template <typename Function>
     __global__ static void forall_block_kernel(int n, Function fun)
     {
@@ -76,6 +95,13 @@ namespace partools
       fun(k);
     }
 
+    /**
+     * @brief Executes a function in parallel on the GPU in batches, where each block handles one batch.
+     * 
+     * @param n The number of iterations.
+     * @param fun The function to execute.
+     * @param batch_size The batch size.
+     */
     template <typename Function>
     __global__ static void batched_forall_block_kernel(int n, Function fun, int batch_size)
     {

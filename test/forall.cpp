@@ -8,18 +8,18 @@ template <ExecutionPolicy policy>
 int forall_test()
 {
   int n = 1<<20;
-  Array<int> arr(n);
+  HostDevicePointer<int> arr(n);
 
-  MemorySpace m = (policy == GPU) ? MemorySpace::Device : MemorySpace::Host;
+  MemorySpace m = (policy == GPU) ? Device : Host;
 
-  int *x = arr.write(false, m);
+  int *x = arr.write(m);
 
   forall<policy>(n, [=] PARTOOLS_HOST_DEVICE (int i) mutable
   {
     x[i] = 2 * i;
   });
 
-  const int *y = arr.host_read();
+  const int *y = arr.read<Host>();
 
   int num_failed = 0;
   for (int i = 0; i < n; i++)
@@ -47,10 +47,10 @@ int forall_3d_test()
   int n = 1<<1;
   int bx = 8, by = 5, bz = 3;
 
-  Array<int> arr(n * bx * by * bz);
+  HostDevicePointer<int> arr(n * bx * by * bz);
 
-  MemorySpace m = (policy == GPU) ? MemorySpace::Device : MemorySpace::Host;
-  int *x = arr.write(false, m);
+  MemorySpace m = (policy == GPU) ? Device : Host;
+  int *x = arr.write(m);
 
   forall_3d<policy>(bx, by, bz, n, [=] PARTOOLS_HOST_DEVICE (int l) mutable
   {
@@ -61,9 +61,8 @@ int forall_3d_test()
       x[idx] = val;
     });
   });
-  // synchronize();
 
-  const int *y = arr.host_read();
+  const int *y = arr.read<Host>();
 
   int num_failed = 0;
 

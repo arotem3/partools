@@ -18,14 +18,20 @@ using namespace partools;
 int main()
 {
   int n = 1<<20;
-  Array<double> x(n);
+  HostDevicePointer<double> x(n);
 
-  double *d_x = x.write(); // device pointer
+  double *d_x = x.write(Device); // device pointer
 
   forall<GPU>(n, [=] PARTOOLS_DEVICE (int i)
   {
     d_x[i] = 2.0 * i;
   });
+
+  // do more stuff
+
+  const double *h_x = x.read(Host);
+
+  // do more stuff
 
   return 0;
 }
